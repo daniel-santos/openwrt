@@ -12,6 +12,7 @@ use strict;
 my @arg;
 my $PREFIX = "CONFIG_";
 
+sub usage;
 sub set_config($$$$) {
 	my $config = shift;
 	my $idx = shift;
@@ -71,7 +72,7 @@ sub config_add($$$) {
 	
 	for ($cfg1, $cfg2) {
 		my %cfg = %$_;
-		
+
 		foreach my $config (keys %cfg) {
 			if ($mod_plus and $config{$config}) {
 				next if $config{$config} eq "y";
@@ -141,7 +142,7 @@ sub parse_expr {
 	my $mod_plus = shift;
 	my $arg = $arg[$$pos++];
 
-	die "Parse error" if (!$arg);
+	usage "Parse error" if (!$arg);
 
 	if ($arg eq '&') {
 		my $arg1 = parse_expr($pos);
@@ -172,14 +173,58 @@ sub parse_expr {
 	}
 }
 
-while (@ARGV > 0 and $ARGV[0] =~ /^-\w+$/) {
+sub usage {
+	my $msg = shift;
+
+	print STDERR $msg, "\n" if $msg;
+	#print STDERR "frank" =~ s/a/g/g;
+	$msg = qq{
+	USAGE
+		$0 [-n|-p prefix] expr [expr [...]]
+
+	Perform one or more binary operations on .config files.
+
+		-n        clear prefix [default is "CONFIG_"]
+		-p prefix set prefix [default is "CONFIG_"]
+
+	Each expression consists of an operator and two operands passed in
+	Polish notation.  Any number of operations can be performed as long as
+	there is one more total operands (files) than operators.
+
+	BINARY OPERATORS
+		&   Return only values that are set and match in both operands.
+		>   Return only the difference bewteen a and b.
+		>+  Return only the positive difference bewteen a and b --
+		    those where values from a are changed to 'y' or 'm' in b.
+		+   Merge a and b overwriting values from a with values from b
+		    if they are set in both.
+		+m  Like +, but only overwrites values from a if they are set
+		    to 'm' in b.
+		-   Return values from a that are not set in b.
+
+	EXAMPLES
+		$0 + .config1 .config2
+	Merge .config1 and .config2
+
+		$0 + .config1 '&' .config2 .config3
+	Merge .config1 with values that match in both .config2 and .config3.
+
+	};
+	$msg =~ s/^\t//mg;
+	print STDERR $msg;
+	die
+}
+
+while (@ARGV > 0 and $ARGV[0] =~ /^--?\w+$/) {
 	my $cmd = shift @ARGV;
 	if ($cmd =~ /^-n$/) {
 		$PREFIX = "";
 	} elsif ($cmd =~ /^-p$/) {
 		$PREFIX = shift @ARGV;
+	} elsif ($cmd =~ /^-(-help|h)$/) {
+		usage
 	} else {
-		die "Invalid option: $cmd\n";
+		usage "Invalid option: $cmd\n";
 	}
 }
 @arg = @ARGV;
