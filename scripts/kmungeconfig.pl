@@ -13,6 +13,14 @@ my @arg;
 my $PREFIX = "CONFIG_";
 
 sub usage;
+
+# Given config $1, set the key $2 to newval $3 if:
+#   1. the key is not already defined in config, or
+#   2. mod_plus $4 is true, or
+#   3. the key exists in config, but the value is '#undef', or
+#   4. the newval is 'y'
+#
+
 sub set_config($$$$) {
 	my $config = shift;
 	my $idx = shift;
@@ -25,6 +33,13 @@ sub set_config($$$$) {
 	}
 }
 
+# When not mod_plus $2:
+# Just loads the goddam file.
+#
+# When mod_plus is true, then subsequent redefinition of a key will only occur
+# if
+# 1. it was last set to 'n'
+# 2. the new value is 'y'
 sub load_config($$) {
 	my $file = shift;
 	my $mod_plus = shift;
