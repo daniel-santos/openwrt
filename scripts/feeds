@@ -947,7 +947,8 @@ my %commands = (
 	'uninstall' => \&uninstall,
 	'feed_config' => \&feed_config,
 	'clean' => sub {
-		system("rm -rf ./feeds ./package/feeds ./target/linux/feeds");
+		print "COMMAND DISABLED FOR SAFETY!  Type rm -rf ./feeds ./package/feeds ./target/linux/feeds if you really want this.\n";
+		# system("rm -rf ./feeds ./package/feeds ./target/linux/feeds");
 	}
 );
 
