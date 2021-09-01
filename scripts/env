@@ -60,7 +60,7 @@ env_init() {
 	command -v git >/dev/null || error "Git is not installed"
 	mkdir -p "$ENVDIR" || error "Failed to create the environment directory"
 	cd "$ENVDIR" || error "Failed to switch to the environment directory"
-	[ -d .git ] || { 
+	[ -e .git ] || {
 		git init -b master &&
 		touch .config &&
 		mkdir files &&
