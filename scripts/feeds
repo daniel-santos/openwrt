@@ -214,7 +214,7 @@ sub update_feed_via($$$$$$$) {
 	my ($base_branch, $branch) = split(/;/, $src, 2);
 	my ($base_commit, $commit) = split(/\^/, $src, 2);
 
-	if( $relocate || !$m->{'update'} || !-d "$localpath/$m->{'controldir'}" ) {
+	if( $relocate || !$m->{'update'} || !-e "$localpath/$m->{'controldir'}" ) {
 		system("rm -rf '$safepath'");
 		if ($m->{'init_branch'} and $branch) {
 			system(sprintf($m->{'init_branch'}, $branch, $base_branch, $safepath)) == 0 or return 1;
@@ -390,7 +390,7 @@ sub list {
 			if (!-d "$localpath" || !$m->{'revision'}) {
 				$revision = "X";
 			}
-			elsif( $m->{'controldir'} && -d "$localpath/$m->{'controldir'}" ) {
+			elsif( $m->{'controldir'} && -e "$localpath/$m->{'controldir'}" ) {
 				$revision = `cd '$localpath'; $m->{'revision'}`;
 			}
 			else {
