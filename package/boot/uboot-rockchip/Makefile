@@ -242,6 +242,13 @@ define U-Boot/rock-3b-rk3568
     radxa_rock-3b
 endef
 
+define U-Boot/myd-lr3568-rk3568
+  $(U-Boot/rk3568/Default)
+  NAME:=MYD-LR3568
+  BUILD_DEVICES:= \
+    myir_myd-lr3568
+endef
+
 
 # RK3588 boards
 
@@ -322,6 +329,7 @@ UBOOT_TARGETS := \
   radxa-e25-rk3568 \
   rock-3a-rk3568 \
   rock-3b-rk3568 \
+  myd-lr3568-rk3568 \
   nanopc-t6-rk3588 \
   rock5b-rk3588 \
   sige7-rk3588 \
