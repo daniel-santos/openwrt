@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2023 Rockchip Electronics Co., Ltd.
+ *
+ */
+/dts-v1/;
+
+#include "rk3568-myc-lr3568.dts"
+#include "rk3568-myd-lr3568.dtsi"
+#include <dt-bindings/soc/rockchip,vop2.h>
+
+/ {
+	model = "MYIR MYD-LR3568X Board";
+	compatible = "rockchip,rk3568-myd-lr3568", "rockchip,rk3568";
+};
+
+// Defined as an enum in latest kernel, so need to be available to cpp
+#define ROCKCHIP_VOP2_CLUSTER0 0
+#define ROCKCHIP_VOP2_CLUSTER1 1
+
+&vp0 {
+	cursor-win-id = <ROCKCHIP_VOP2_CLUSTER0>;
+};
+
+&vp1 {
+	cursor-win-id = <ROCKCHIP_VOP2_CLUSTER1>;
+};
+
+/*
+默认显示HDMI(VP0) DP(VP1) LVDS(VP2)
+
+使能DSI1转HDMI：
+	将&hdmi
+	  &hdmi_in_vp0
+	  &route_hdmi 改为 disabled
+	将&dsi1
+	  &video_phy1
+	  &dsi1_in_vp0
+	  &lt9611_bridge 改为 okay
+*/
+&hdmi {
+	status = "okay";
+};
+
+// &hdmi_in_vp0 {
+// 	status = "okay";
+// };
+
+// &route_hdmi {
+// 	status = "okay";
+// };
+
+&dsi1 {
+	status = "disabled";
+};
+// &video_phy1 {
+// 	status = "disabled";
+// };
+
+// &dsi1_in_vp0 {
+// 	status = "disabled";
+// };
+
+&lt9611_bridge {
+	status = "disabled";
+};
