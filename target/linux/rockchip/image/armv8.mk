@@ -124,6 +124,18 @@ define Device/friendlyarm_nanopi-r6s
 endef
 TARGET_DEVICES += friendlyarm_nanopi-r6s
 
+define Device/myir_myd-lr3568
+  DEVICE_VENDOR := MYiR
+  DEVICE_MODEL := MYC-LR3568
+#  DEVICE_MODEL := MYiR MYC-LR3568 Development Board with MY-ICEB001 Expansion
+  SOC := rk3568
+  DEVICE_DTS := rockchip/rk3568-myd-lr3568
+  UBOOT_DEVICE_NAME := myd-lr3568-rk3568
+  BOOT_SCRIPT := myc-lr3568
+  DEVICE_PACKAGES := kmod-mii kmod-usb-core kmod-usb-net
+endef
+TARGET_DEVICES += myir_myd-lr3568
+
 define Device/pine64_rock64
   DEVICE_VENDOR := Pine64
   DEVICE_MODEL := Rock64

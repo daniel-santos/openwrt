@@ -1,0 +1,24 @@
+From 5fb3d9135a0ce8e63413e871fb68b15f7a32e98f Mon Sep 17 00:00:00 2001
+From: Daniel Santos <daniel.santos@pobox.com>
+Date: Wed, 1 Jan 2025 21:02:26 -0600
+Subject: [PATCH] Add MYiR MYD-LR3568
+
+---
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ 1 files changed, 1 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index a09f5200f..17738bcdd 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -98,6 +98,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r68s.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-lubancat-2.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5c.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5s.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-myd-lr3568.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-odroid-m1.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-radxa-e25.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-roc-pc.dtb
+-- 
+2.39.5
+
