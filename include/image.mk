@@ -299,6 +299,18 @@ define Image/mkfs/ubifs
 endef
 
 define Image/mkfs/ext4
+	set -ex;									\
+	target_dir=$(call mkfs_target_dir,$(1));					\
+	data_blocks=$$(du -sB $(CONFIG_TARGET_EXT4_BLOCKSIZE) $$target_dir|awk '{print $$1}');	\
+	inodes=$$(du -s --inodes $$target_dir|awk '{print $$1}');			\
+	min_size=$$((data_blocks * $(CONFIG_TARGET_EXT4_BLOCKSIZE) + inodes * 256));	\
+	part_size=$(ROOTFS_PARTSIZE);							\
+	part_size=$$((part_size * 1048576));						\
+	if test $$part_size -gt $$min_size; then					\
+	  printf "\n** ROOTFS_PARTSIZE is too small; you need at least %d MiB **\n\n"	\
+	      $$(((min_size + 1048575) / 1048576)) >&2;					\
+	  exit 1;									\
+	fi;										\
 	$(STAGING_DIR_HOST)/bin/make_ext4fs -L rootfs \
 		-l $(ROOTFS_PARTSIZE) -b $(CONFIG_TARGET_EXT4_BLOCKSIZE) \
 		$(if $(CONFIG_TARGET_EXT4_RESERVED_PCT),-m $(CONFIG_TARGET_EXT4_RESERVED_PCT)) \

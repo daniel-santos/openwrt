@@ -15,6 +15,15 @@ ROOTFSIMAGE="$5"
 ROOTFSPARTTYPE=${ROOTFSPARTTYPE:-83}
 ALIGN="$6"
 
+rootfs_bytes=$((ROOTFSSIZE * 1048576))
+real_rootfs_size=$(stat -c %s $ROOTFSIMAGE)
+if [ $real_rootfs_size -gt $rootfs_bytes ]; then
+  min_size_mib=$(((real_rootfs_size + 1048575) / 1048576))
+  printf "%s too large (%d > %d bytes); increase CONFIG_TARGET_ROOTFS_PARTSIZE to at least %d.\n" \
+      $(basename $ROOTFSIMAGE) $real_rootfs_size $rootfs_bytes $min_size_mib >&2
+  exit 1
+fi
+
 rm -f "$OUTPUT"
 
 head=16
