@@ -309,7 +309,7 @@ endef
 
 define Build/edimax-header
 	$(STAGING_DIR_HOST)/bin/mkedimaximg -i $@ -o $@.new $(1)
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/elecom-product-header
@@ -393,26 +393,26 @@ define Build/fit
 		-A $(LINUX_KARCH) -v $(LINUX_VERSION), gen-cpio$(if $(TARGET_PER_DEVICE_ROOTFS),.$(ROOTFS_ID/$(DEVICE_NAME))))
 	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage $(if $(findstring external,$(word 3,$(1))),\
 		-E -B 0x1000 $(if $(findstring static,$(word 3,$(1))),-p 0x1000)) -f $@.its $@.new
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/libdeflate-gzip
 	$(STAGING_DIR_HOST)/bin/libdeflate-gzip -f -12 -c $@ $(1) > $@.new
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/gzip
 	$(STAGING_DIR_HOST)/bin/gzip -f -9n -c $@ $(1) > $@.new
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/gzip-filename
-	@mkdir -p $@.tmp
-	@cp $@ $@.tmp/$(word 1,$(1))
+	mkdir -p $@.tmp
+	cp $@ $@.tmp/$(word 1,$(1))
 	$(if $(SOURCE_DATE_EPOCH),touch -hcd "@$(SOURCE_DATE_EPOCH)" $@.tmp/$(word 1,$(1)) $(word 2,$(1)))
 	$(STAGING_DIR_HOST)/bin/gzip -f -9 -N -c $@.tmp/$(word 1,$(1)) $(word 2,$(1)) > $@.new
-	@mv $@.new $@
-	@rm -rf $@.tmp
+	mv $@.new $@
+	rm -rf $@.tmp
 endef
 
 define Build/install-dtb
@@ -448,7 +448,7 @@ define Build/jffs2
 			2>&1 1>/dev/null | awk '/^.+$$$$/' && \
 		$(STAGING_DIR_HOST)/bin/padjffs2 $@.new -J $(patsubst %k,,$(BLOCKSIZE))
 	-rm -rf $(KDIR_TMP)/$(DEVICE_NAME)/jffs2/
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/yaffs-filesystem
@@ -490,7 +490,7 @@ endef
 
 define Build/lzma-no-dict
 	$(STAGING_DIR_HOST)/bin/lzma e $@ $(1) $@.new
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/moxa-encode-fw
@@ -591,14 +591,14 @@ define Build/qsdk-ipq-factory-nand
 	$(TOPDIR)/scripts/mkits-qsdk-ipq-image.sh \
 		$@.its ubi $@
 	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage -f $@.its $@.new
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/qsdk-ipq-factory-nor
 	$(TOPDIR)/scripts/mkits-qsdk-ipq-image.sh \
 		$@.its hlos $(IMAGE_KERNEL) rootfs $(IMAGE_ROOTFS)
 	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage -f $@.its $@.new
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 define Build/seama
@@ -644,7 +644,7 @@ define Build/tplink-v1-header
 		-E $(if $(KERNEL_ENTRY),$(KERNEL_ENTRY),$(KERNEL_LOADADDR)) \
 		-m $(TPLINK_HEADER_VERSION) -N "$(VERSION_DIST)" -V $(REVISION) \
 		-k $@ -o $@.new $(1)
-	@mv $@.new $@
+	mv $@.new $@
 endef
 
 # combine kernel and rootfs into one image
