@@ -132,7 +132,21 @@ define Device/myir_myd-lr3568
   DEVICE_DTS := rockchip/rk3568-myd-lr3568
   UBOOT_DEVICE_NAME := myd-lr3568-rk3568
   BOOT_SCRIPT := myc-lr3568
-  DEVICE_PACKAGES := kmod-mii kmod-usb-core kmod-usb-net
+  DEVICE_PACKAGES := \
+	kmod-mii \
+	kmod-usb-core \
+	kmod-usb-net \
+	kmod-dwmac-rockchip \
+	kmod-b43 \
+	kmod-brcmfmac \
+	kmod-mac80211 \
+	kmod-cfg80211 \
+	wpad-basic-mbedtls \
+	kmod-can \
+	kmod-w1 \
+	kmod-w1-master-ds2482 \
+	kmod-w1-slave-therm \
+	trusted-firmware-a-rk3568
 endef
 TARGET_DEVICES += myir_myd-lr3568
 
