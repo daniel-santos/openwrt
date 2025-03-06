@@ -33,6 +33,7 @@ define Build/pine64-img
 	# http://opensource.rock-chips.com/wiki_Boot_option#Boot_flow
 	#
 	# U-Boot SPL expects the U-Boot ITB to be located at sector 0x4000 (8 MiB) on the MMC storage
+	set -x; \
 	PADDING=1 $(SCRIPT_DIR)/gen_image_generic.sh \
 		$@ \
 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $@.boot \
@@ -40,6 +41,7 @@ define Build/pine64-img
 		32768
 
 	# Copy the u-boot-rockchip.bin to the image at sector 0x40
+	set -x; \
 	dd if="$(STAGING_DIR_IMAGE)"/$(UBOOT_DEVICE_NAME)-u-boot-rockchip.bin of="$@" seek=64 conv=notrunc
 endef
 

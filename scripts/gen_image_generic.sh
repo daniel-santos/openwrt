@@ -6,6 +6,7 @@ if [ $# -ne 5 ] && [ $# -ne 6 ]; then
     exit 1
 fi
 
+set -x
 OUTPUT="$1"
 KERNELSIZE="$2"
 KERNELDIR="$3"
@@ -63,6 +64,8 @@ if [ -n "$GUID" ]; then
     mkfs.fat --invariant -n kernel -C "$OUTPUT.kernel" -S 512 "$((KERNELSIZE / 1024))"
     LC_ALL=C dos_dircopy "$KERNELDIR" /
 else
+    ls -alF --color=always "$OUTPUT.kernel" "$KERNELDIR" || true
+    (env && ulimit -a) > /tmp/gen_image_generic.$$.debug
     make_ext4fs -J -L kernel -l "$KERNELSIZE" ${SOURCE_DATE_EPOCH:+-T ${SOURCE_DATE_EPOCH}} "$OUTPUT.kernel" "$KERNELDIR"
 fi
 dd if="$OUTPUT.kernel" of="$OUTPUT" bs=512 seek="$KERNELOFFSET" conv=notrunc
