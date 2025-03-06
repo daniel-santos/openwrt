@@ -174,3 +174,19 @@ define KernelPackage/w1-slave-ds2413/description
 endef
 
 $(eval $(call KernelPackage,w1-slave-ds2413))
+
+
+define KernelPackage/w1-slave-ds2408
+  TITLE:=8-Channel Addressable Switch (IO Expander) 0x29 family support (DS2408)
+  KCONFIG:= \
+	    CONFIG_W1_SLAVE_DS2408
+  FILES:=$(W1_SLAVES_DIR)/w1_ds2408.ko
+  AUTOLOAD:=$(call AutoProbe,w1_ds2408)
+  $(call AddDepends/w1)
+endef
+
+define KernelPackage/w1-slave-therm/description
+ Kernel module for 1-wire thermal sensors
+endef
+
+$(eval $(call KernelPackage,w1-slave-therm))

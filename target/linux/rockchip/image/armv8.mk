@@ -132,6 +132,38 @@ define Device/myir_myd-lr3568
   DEVICE_DTS := rockchip/rk3568-myd-lr3568
   UBOOT_DEVICE_NAME := myd-lr3568-rk3568
   BOOT_SCRIPT := myc-lr3568
+  IMAGE/sysupgrade.img.gz = boot-common | boot-script $$(BOOT_SCRIPT) | squishy | gzip | append-metadata
+  KCONFIG := \
+	KERNEL_LOG_BUF_SHIFT=22 \
+	KERNEL_LOG_CPU_MAX_BUF_SHIFT=16 \
+	KERNEL_NR_CPUS=8 \
+	KERNEL_CPU_FREQ_GOV_ONDEMAND=y \
+	KERNEL_SERIAL_8250_NR_UARTS=10 \
+	KERNEL_SERIAL_8250_RUNTIME_UARTS=10 \
+	KERNEL_USB_OTG=y \
+	KERNEL_USB_MON=y \
+	KERNEL_USB_ACM=y \
+	KERNEL_IIO_CONFIGFS=y \
+	KERNEL_IIO_SW_TRIGGER=y \
+	KERNEL_CONNECTOR=y \
+	KERNEL_W1_CON=y \
+	KERNEL_W1_MASTER_DS2482=m \
+	KERNEL_W1_SLAVE_DS2408=m \
+	KERNEL_W1_SLAVE_SMEM=m \
+	KERNEL_SND=y \
+	KERNEL_SND_SOC=y \
+	KERNEL_SND_SOC_RK817=y
+
+# 	CONFIG_NET_DSA \
+# 	CONFIG_NET_DSA_TAG_BRCM \
+# 	CONFIG_NET_DSA_TAG_BRCM_COMMON \
+# 	CONFIG_NET_DSA_TAG_BRCM_LEGACY \
+# 	CONFIG_NET_DSA_TAG_BRCM_PREPEND
+
+# 	CONFIG_CFG80211 \
+# 	CONFIG_MAC80211 \
+# 	CONFIG_B43 \
+# 	CONFIG_B43_SDIO
   DEVICE_PACKAGES := \
 	kmod-mii \
 	kmod-usb-core \
@@ -146,9 +178,15 @@ define Device/myir_myd-lr3568
 	kmod-w1 \
 	kmod-w1-master-ds2482 \
 	kmod-w1-slave-therm \
-	trusted-firmware-a-rk3568
+	kmod-w1-slave-smem \
+	trusted-firmware-a-rk3568 \
+	kmod-usb-net-qmi-wwan
 endef
 TARGET_DEVICES += myir_myd-lr3568
+
+# 	kmod-brcmutil \
+# 	brcmfmac-firmware-4329-sdio \
+
 
 define Device/pine64_rock64
   DEVICE_VENDOR := Pine64

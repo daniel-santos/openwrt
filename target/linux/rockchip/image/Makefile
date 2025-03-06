@@ -38,7 +38,24 @@ define Build/pine64-img
 		$@ \
 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $@.boot \
 		$(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
-		32768
+		32768 2>&1 | tee $$(mktmp /tmp/gen_image_generic.XXXXXXXX) >&2
+
+	# Copy the u-boot-rockchip.bin to the image at sector 0x40
+	set -x; \
+	dd if="$(STAGING_DIR_IMAGE)"/$(UBOOT_DEVICE_NAME)-u-boot-rockchip.bin of="$@" seek=64 conv=notrunc
+endef
+
+define Build/squishy
+	# Creates the final SD/eMMC images,
+	# combining boot partition, u-boot bootloader, root partition and overlay
+
+	set -x; \
+	PADDING=1 $(SCRIPT_DIR)/gen_image_squash_ext4.sh \
+		$@ \
+		$(CONFIG_TARGET_KERNEL_PARTSIZE) $@.boot \
+		$(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
+		ext4 1024 \
+		32768 2>&1 | tee $$(mktmp /tmp/gen_image_squash_ext4.XXXXXXXX) >&2
 
 	# Copy the u-boot-rockchip.bin to the image at sector 0x40
 	set -x; \
@@ -51,7 +68,7 @@ define Device/Default
   KERNEL = kernel-bin | lzma | fit lzma $$(DTS_DIR)/$$(DEVICE_DTS).dtb
   BOOT_SCRIPT :=
   IMAGES := sysupgrade.img.gz
-  IMAGE/sysupgrade.img.gz = boot-common | boot-script $$(BOOT_SCRIPT) | pine64-img | gzip | append-metadata
+  IMAGE/sysupgrade.img.gz = boot-common | boot-script $$(BOOT_SCRIPT) | squishy | gzip | append-metadata
   DEVICE_DTS = rockchip/$$(SOC)-$(lastword $(subst _, ,$(1)))
   UBOOT_DEVICE_NAME = $(lastword $(subst _, ,$(1)))-$$(SOC)
 endef

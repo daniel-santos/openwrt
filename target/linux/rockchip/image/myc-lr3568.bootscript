@@ -1,6 +1,8 @@
-part uuid ${devtype} ${devnum}:2 uuid
+part uuid ${devtype} ${devnum}:2 rootuuid
+part uuid ${devtype} ${devnum}:3 datauuid
 
-setenv bootargs "console=ttyS2,115200 earlycon=uart8250,mmio32,0xfe660000 root=PARTUUID=${uuid} rw rootwait";
+setenv bootargs "console=ttyS2,115200 earlycon=uart8250,mmio32,0xfe660000 root=PARTUUID=${rootuuid} rootfs_data=PARTUUID=${datauuid} rw rootwait";
+#setenv bootargs "console=ttyS2,115200 earlycon=uart8250,mmio32,0xfe660000 clk_ignore_unused root=PARTUUID=${uuid} rw rootwait";
 
 load ${devtype} ${devnum}:1 ${kernel_addr_r} kernel.img
 

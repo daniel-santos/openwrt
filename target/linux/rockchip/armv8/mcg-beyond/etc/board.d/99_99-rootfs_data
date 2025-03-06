@@ -1,0 +1,37 @@
+#!/bin/sh
+
+set -eo pipefail
+rootfs_data=$(blkid -L rootfs_data)
+eval $(blkid -o export $rootfs_data | grep ^UUID)
+blocks=$(tune2fs -l $rootfs_data | grep "Block count" | awk '{print $3}')
+if [ $blocks -lt 4096 ]; then
+    e2fsck $rootfs_data || true
+    resize2fs $rootfs_data
+fi
+
+mv /etc/config/fstab /etc/config/fstab.orig || true
+
+# TODO: config for development, remove usb mount before release
+cat << EOF > /etc/config/fstab
+config global
+	option anon_swap  0
+	option anon_mount 0
+	option auto_swap  1
+	option auto_mount 1
+	option delay_root 5
+	option check_fs  1
+
+config mount
+	option target /overlay
+	option uuid $UUID
+	option enabled 1
+	option fstype ext4
+	option options noatime
+
+config mount
+	option target /home/daniel/proj/gse/harmonia
+	option uuid 14c92270-b950-4b07-8c6d-e772fd124b6b
+	option enabled 1
+	option fstype ext4
+	option options noatime
+EOF

@@ -307,7 +307,7 @@
 		enable-active-high;
 		regulator-always-on;
 		regulator-boot-on;
-		gpio = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
+		// gpio = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
 		vin-supply = <&vcc5v0_usb>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&usb_hub>;
@@ -915,6 +915,7 @@
 
 &i2c5 {
 	status = "okay";
+	clock-frequency = <100000>;
 };
 
 &i2s0_8ch {
@@ -1870,7 +1871,7 @@
 };*/
 
 &gmac0 {
-	phy-mode = "rgmii";
+	phy-mode = "rgmii-id";
 	clock_in_out = "output";
 
 	snps,reset-gpio = <&gpio3 RK_PC1 GPIO_ACTIVE_LOW>;
@@ -1897,7 +1898,7 @@
 };
 
 &gmac1 {
-	phy-mode = "rgmii";
+	phy-mode = "rgmii-id";
 	clock_in_out = "output";
 
 	snps,reset-gpio = <&gpio1 RK_PA4 GPIO_ACTIVE_LOW>;
@@ -1921,6 +1922,26 @@
 
 	phy-handle = <&rgmii_phy1>;
 	status = "okay";
+};
+
+&mdio0 {
+	rgmii_phy0: ethernet-phy@0 {
+		compatible = "ethernet-phy-ieee802.3-c22";
+		reg = <0x0>;
+		reset-assert-us = <20000>;
+		reset-deassert-us = <100000>;
+		reset-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&mdio1 {
+	rgmii_phy1: ethernet-phy@0 {
+		compatible = "ethernet-phy-ieee802.3-c22";
+		reg = <0x0>;
+		reset-assert-us = <20000>;
+		reset-deassert-us = <100000>;
+		reset-gpios = <&gpio2 RK_PD1 GPIO_ACTIVE_LOW>;
+	};
 };
 
 /*
@@ -2047,20 +2068,21 @@
 		touchscreen-size-x=<1024>;
 		touchscreen-size-y=<600>;
 		status = "okay";
-    };
-};
-
-&mdio0 {
-	rgmii_phy0: phy@0 {
-		compatible = "ethernet-phy-ieee802.3-c22";
-		reg = <0x0>;
 	};
-};
-
-&mdio1 {
-	rgmii_phy1: phy@0 {
-		compatible = "ethernet-phy-ieee802.3-c22";
-		reg = <0x0>;
+	onewire@18 {
+		compatible = "maxim,ds2482";
+		reg = <0x18>;
+		status = "okay";
+	};
+	lsm6dsox@6a {
+		compatible = "st,lsm6dsox";
+		reg = <0x6a>;
+//		clock-frequency = <100000>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&imu_gpio>;
+		interrupt-parent = <&gpio4>;
+		interrupts = <RK_PD2 IRQ_TYPE_EDGE_RISING>;
+		status = "okay";
 	};
 };
 
@@ -2115,6 +2137,12 @@
 			rockchip,pins =
 				<0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>,
 				<0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+
+	imu {
+		imu_gpio: imu-gpio {
+			rockchip,pins = <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_down>;
 		};
 	};
 };
@@ -2323,6 +2351,8 @@
 		mmc1 = &sdmmc0;
 		mmc2 = &sdmmc1;
 		mmc3 = &sdmmc2;
+		ethernet0 = "/ethernet@fe2a0000";
+		ethernet1 = "/ethernet@fe010000";
 	};
 
 	chosen: chosen {
